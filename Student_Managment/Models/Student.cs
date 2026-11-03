@@ -6,12 +6,35 @@ namespace Student_Managment.Models
 {
     internal class Student
     {
+        public static readonly HashSet<char> grades = new HashSet<char>() {'A', 'B', 'C', 'D', 'F'};
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int RollNum { get; set; }
-        public char Grade { get; private set; }
-
         private int count = 0;
+        private char _grade;
+        public char Grade 
+        {
+            get
+            {
+                return _grade;
+            }
+
+            set
+            {
+                if (IsValidGrade(value))
+                {
+                    _grade = value;
+                } else
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value), value, "argument isn't a grade.");
+                }
+            }
+
+        }
+        public static bool IsValidGrade(char grade)
+        {
+            if (grades.Contains(grade)) return true; return false;
+        }
 
         public Student(string name, int rollNum, char grade)
         {
@@ -20,18 +43,6 @@ namespace Student_Managment.Models
             Name = name;
             RollNum = rollNum;
             Grade = grade;
-        }
-
-        public bool ModifyGrade(char grade)
-        {
-            if(char.IsAsciiLetter(grade))
-            {
-                Grade = grade;
-                return true;
-            } else
-            {
-                return false;
-            }
         }
 
         public override string ToString()

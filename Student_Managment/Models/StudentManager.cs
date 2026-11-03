@@ -49,17 +49,18 @@ namespace Student_Managment.Models
             //KeyValuePair<char, List<Student>> GradeToStudentKVP = new KeyValuePair<char, List<Student>>();
             //BestGradeToStudentsMap.TryGetValue(student.Grade, out List<Student> students);
             //bool gradeToStudentsContains = students.Contains(student);
-            bool setContains = StudentsSet.Contains(student);
-            bool idToStudentContains = IdToStudentMap.ContainsKey(student.Id);
-            bool rollToStudentContains = RollToStudentMap.ContainsKey(student.RollNum);
+            if (StudentsSet.Contains(student)) return false;
+            if (IdToStudentMap.ContainsKey(student.Id)) return false;
+            if (RollToStudentMap.ContainsKey(student.RollNum)) return false;
+            return true;
 
-            if (setContains || idToStudentContains || rollToStudentContains)
-            {
-                return false;
-            } else
-            {
-                return true;
-            }
+            //if (setContains || idToStudentContains || rollToStudentContains)
+            //{
+            //    return false;
+            //} else
+            //{
+            //    return true;
+            //}
 
         } 
 

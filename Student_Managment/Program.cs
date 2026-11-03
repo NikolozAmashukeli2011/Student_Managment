@@ -6,7 +6,7 @@ do
 {
     Console.WriteLine(
         "\n1. Add a student.\n" +
-        "2. Remove a student.\n" +
+        "2. Remove a student By Id.\n" +
         "3. Find student by roll number.\n" +
         "4. Find student by id.\n" +
         "5. Display students.\n" +

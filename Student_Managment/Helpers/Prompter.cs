@@ -22,5 +22,17 @@ namespace Student_Managment.Helpers
 
             return result;
         }
+
+        public static string PromptString(string startingTxt, string typeErrTxt, string retryTxt)
+        {
+            string result = PromptGeneric<string>(startingTxt, typeErrTxt);
+
+            while(string.IsNullOrWhiteSpace(result))
+            {
+                result = PromptGeneric<string>(retryTxt, typeErrTxt);
+            }
+
+            return result;
+        }
     }
 }
