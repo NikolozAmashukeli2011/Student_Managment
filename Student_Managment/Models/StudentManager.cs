@@ -7,8 +7,8 @@ namespace Student_Managment.Models
     static class StudentManager
     {
         public static HashSet<Student> StudentsSet = new HashSet<Student>();
-        public static SortedList<char, List<Student>> BestGradeToStudentsMap = new SortedList<char, List<Student>>(Comparer<char>.Create((x, y) => y.CompareTo(x)));
-        public static Dictionary<int, Student> RollToStudentMap = new Dictionary<int, Student>();
+        public static SortedList<char, List<Student>> BestGradeToStudentsMap = new SortedList<char, List<Student>>();
+        public static Dictionary<int, List<Student>> RollToStudentsMap = new Dictionary<int, List<Student>>();
         public static Dictionary<int, Student> IdToStudentMap = new Dictionary<int, Student>();
 
         public static void DisplayAllStudents()
@@ -34,43 +34,22 @@ namespace Student_Managment.Models
             }
         }
 
-        public static bool FindStudentByRollNum(int rollNum, out Student? foundStudent)
+        public static bool FindStudentsByRollNum(int rollNum, out List<Student>? foundStudents)
         {
-            return RollToStudentMap.TryGetValue(rollNum, out foundStudent);
-        }
+             bool rollFound = RollToStudentsMap.TryGetValue(rollNum, out List<Student>? foundList);
+             foundStudents = null;
 
-        public static bool FindStudentById(int id, out Student? foundStudent)
-        {
-            return IdToStudentMap.TryGetValue(id, out foundStudent);
-        }
-       
-        private static bool CanAddStudent(Student student)
-        {
-            //KeyValuePair<char, List<Student>> GradeToStudentKVP = new KeyValuePair<char, List<Student>>();
-            //BestGradeToStudentsMap.TryGetValue(student.Grade, out List<Student> students);
-            //bool gradeToStudentsContains = students.Contains(student);
-            if (StudentsSet.Contains(student)) return false;
-            if (IdToStudentMap.ContainsKey(student.Id)) return false;
-            if (RollToStudentMap.ContainsKey(student.RollNum)) return false;
-            return true;
-
-            //if (setContains || idToStudentContains || rollToStudentContains)
-            //{
-            //    return false;
-            //} else
-            //{
-            //    return true;
-            //}
-
-        } 
-
-        public static bool AddStudent(Student student)
-        {
-            if (CanAddStudent(student))
+            if(rollFound)
             {
-                StudentsSet.Add(student);
-                IdToStudentMap[student.Id] = student;
-                RollToStudentMap[student.RollNum] = student;
+                 if(foundList?.Count == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    foundStudents = foundList;
+                }
+
                 return true;
             } else
             {
@@ -78,16 +57,64 @@ namespace Student_Managment.Models
             }
         }
 
-        public static bool RemoveStudent(Student student)
+        public static bool FindStudentById(int id, out Student? foundStudent)
         {
-            if(CanAddStudent(student))
+            return IdToStudentMap.TryGetValue(id, out foundStudent);
+        }
+       
+        private static bool StudentExists(Student student)
+        {
+            if (IdToStudentMap.ContainsKey(student.Id)) return true;
+ 
+            return false;
+        } 
+
+        public static bool AddStudent(Student student)
+        {
+            if (StudentExists(student))
             {
                 return false;
-            } else {
+            } else
+            {
+                bool gradeListExists = BestGradeToStudentsMap.TryGetValue(student.Grade, out List<Student>? gradeStudents);
+                bool rollListExists = RollToStudentsMap.TryGetValue(student.RollNum, out List<Student>? rollStudents);
+
+                if (!gradeListExists)
+                {
+                    List<Student> newGradeList = new List<Student>();
+                    BestGradeToStudentsMap.Add(student.Grade, newGradeList);
+
+                    gradeStudents = newGradeList;
+                }
+
+                if (!rollListExists)
+                {
+                    List<Student> newRollList = new List<Student>();
+                    RollToStudentsMap.Add(student.RollNum, newRollList);
+
+                    rollStudents = newRollList;
+                }
+
+                gradeStudents?.Add(student);
+                StudentsSet.Add(student);
+                IdToStudentMap[student.Id] = student;
+                rollStudents?.Add(student);
+                return true;
+            }
+        }
+
+        public static bool RemoveStudent(Student student)
+        {
+            if(StudentExists(student))
+            {
+                BestGradeToStudentsMap.TryGetValue(student.Grade, out List<Student> students);
+                students.Remove(student);
                 StudentsSet.Remove(student);
                 IdToStudentMap.Remove(student.Id);
-                RollToStudentMap.Remove(student.RollNum);
-                return true;
+                RollToStudentsMap[student.RollNum].Remove(student);
+                return true; 
+            } else {
+                return false;
             }
         }
     }

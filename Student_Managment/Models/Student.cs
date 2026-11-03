@@ -10,7 +10,7 @@ namespace Student_Managment.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int RollNum { get; set; }
-        private int count = 0;
+        public static int count = 0;
         private char _grade;
         public char Grade 
         {
