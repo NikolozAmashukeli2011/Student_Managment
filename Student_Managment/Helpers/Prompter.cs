@@ -14,7 +14,7 @@ namespace Student_Managment.Helpers
             Console.WriteLine(startingTxt);
             string input = Console.ReadLine();
 
-            while(T.TryParse(input, CultureInfo.InvariantCulture, out result))
+            while(!T.TryParse(input, CultureInfo.InvariantCulture, out result))
             {
                 Console.WriteLine(errTxt);
                 input = Console.ReadLine();

@@ -48,8 +48,9 @@ namespace Student_Managment.Models
                 else
                 {
                     foundStudents = foundList;
-                    return true;
                 }
+
+                return true;
             } else
             {
                 return false;
@@ -63,7 +64,9 @@ namespace Student_Managment.Models
        
         private static bool StudentExists(Student student)
         {
-            if (IdToStudentMap.ContainsKey(student.Id)) return true; return false;
+            if (IdToStudentMap.ContainsKey(student.Id)) return true;
+ 
+            return false;
         } 
 
         public static bool AddStudent(Student student)
