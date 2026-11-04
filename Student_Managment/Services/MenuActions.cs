@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Student_Managment
+namespace Student_Managment.Services
 {
     static class MenuActions
     {

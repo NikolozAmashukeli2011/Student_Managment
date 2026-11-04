@@ -31,17 +31,17 @@ namespace Student_Managment.Services
 
         }
 
-        public static List<Student> Load()
+        public static IEnumerable<Student> Load()
         {
 
-            if (!File.Exists(FilePath)) return new List<Student>();
+            if (!File.Exists(FilePath)) return Enumerable.Empty<Student>();
 
             try
             {
                 using (var sw = new StreamReader(FilePath))
                 {
                     string json = sw.ReadToEnd();
-                    return JsonSerializer.Deserialize<List<Student>>(json, options) ?? new List<Student>();
+                    return JsonSerializer.Deserialize<IEnumerable<Student>>(json, options) ?? Enumerable.Empty<Student>();
                 }
             }
             catch (IOException ex)
@@ -57,7 +57,7 @@ namespace Student_Managment.Services
                 Console.WriteLine($"The text isn't valid JSON. {ex.Message}");
             }
 
-            return new List<Student>();
+            return Enumerable.Empty<Student>();
         }
     }
 }
