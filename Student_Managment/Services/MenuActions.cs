@@ -116,5 +116,30 @@ namespace Student_Managment.Services
             }
         }
 
+        public static void RemoveAllStudents()
+        {
+
+            string choice = Prompter.PromptGeneric<string>("Are you sure that you want to remove all Students? (Yes or No):",
+                                                            "Input must be a text, try again: ").Trim();
+
+            bool sure = string.Equals(choice, "Yes", StringComparison.OrdinalIgnoreCase);
+            bool unSure = string.Equals(choice, "No", StringComparison.OrdinalIgnoreCase);
+
+            while (!sure && !unSure)
+            {
+                choice = Prompter.PromptGeneric<string>("Input must be either yes, or no, try again: ",
+                                                        "Input must be a text, try again: ").Trim();
+
+                sure = string.Equals(choice, "Yes", StringComparison.OrdinalIgnoreCase);
+                unSure = string.Equals(choice, "No", StringComparison.OrdinalIgnoreCase);
+            }
+
+            if (sure)
+            {
+                StudentManager.RemoveAllStudents();
+                Console.WriteLine("\nStudents removed Successfully!\n");
+            }
+        }
+
     }
 }

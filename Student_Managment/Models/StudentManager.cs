@@ -145,5 +145,15 @@ namespace Student_Managment.Models
                 return false;
             }
         }
+
+        public static void RemoveAllStudents()
+        {
+            studentsList.Clear();
+            IdToStudentMap.Clear();
+            BestGradeToStudentsMap.Clear();
+            RollToStudentsMap.Clear();
+
+            SaveAll();
+        }
     }
 }
