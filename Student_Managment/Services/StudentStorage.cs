@@ -8,9 +8,9 @@ namespace Student_Managment.Services
         private static readonly string FilePath = "students.json";
         private static readonly JsonSerializerOptions options = new JsonSerializerOptions() { WriteIndented = true };
 
-        public static void Save(List<Student> students)
+        public static void Save(StudentStorageData data)
         {
-            string json = JsonSerializer.Serialize(students, options);
+            string json = JsonSerializer.Serialize(data, options);
 
             try
             {
@@ -31,17 +31,17 @@ namespace Student_Managment.Services
 
         }
 
-        public static IEnumerable<Student> Load()
+        public static StudentStorageData Load()
         {
 
-            if (!File.Exists(FilePath)) return Enumerable.Empty<Student>();
+            if (!File.Exists(FilePath)) return new StudentStorageData();
 
             try
             {
                 using (var sw = new StreamReader(FilePath))
                 {
                     string json = sw.ReadToEnd();
-                    return JsonSerializer.Deserialize<IEnumerable<Student>>(json, options) ?? Enumerable.Empty<Student>();
+                    return JsonSerializer.Deserialize<StudentStorageData>(json, options) ?? new StudentStorageData();
                 }
             }
             catch (IOException ex)
@@ -57,7 +57,7 @@ namespace Student_Managment.Services
                 Console.WriteLine($"The text isn't valid JSON. {ex.Message}");
             }
 
-            return Enumerable.Empty<Student>();
+            return new StudentStorageData();
         }
     }
 }

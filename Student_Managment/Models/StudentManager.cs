@@ -11,10 +11,19 @@ namespace Student_Managment.Models
 
         static StudentManager()
         {
-            foreach (Student s in StudentStorage.Load())
+            StudentStorageData data = StudentStorage.Load();
+
+            Student.Count = data.IdCount;
+
+            foreach (Student s in data.Students)
             {
                 AddToCollections(s);
             }
+        }
+
+        private static void SaveAll()
+        {
+            StudentStorage.Save(new StudentStorageData(studentsList, Student.Count));
         }
 
         private static void AddToCollections(Student s)
@@ -30,7 +39,7 @@ namespace Student_Managment.Models
                 rollStudents = new List<Student>();
                 RollToStudentsMap[s.RollNum] = rollStudents;
             }
-
+            
             gradeStudents.Add(s);
             rollStudents.Add(s);
             studentsList.Add(s);
@@ -41,7 +50,7 @@ namespace Student_Managment.Models
         {
             if (studentsList.Count == 0)
             {
-                Console.WriteLine("\nThere are no students.\n");
+                Console.WriteLine("There are no students.");
             }
             else
             {
@@ -56,13 +65,19 @@ namespace Student_Managment.Models
 
         public static void DisplayStudentsByGrade()
         {
-            Console.WriteLine("\n[STUDENTS BY GRADE]\n");
-
-            foreach ((char grade, List<Student> students) in BestGradeToStudentsMap)
+            if (BestGradeToStudentsMap.Count == 0)
             {
-                foreach (Student student in students)
+                Console.WriteLine("There are no students.");
+            } else
+            {
+                Console.WriteLine("\n[STUDENTS BY GRADE]\n");
+
+                foreach ((char grade, List<Student> students) in BestGradeToStudentsMap)
                 {
-                    Console.WriteLine($"Grade: [{grade}], Student: {student.ToString()}\n");
+                    foreach (Student student in students)
+                    {
+                        Console.WriteLine($"Grade: [{grade}], Student: {student.ToString()}\n");
+                    }
                 }
             }
         }
@@ -96,12 +111,7 @@ namespace Student_Managment.Models
             return IdToStudentMap.TryGetValue(id, out foundStudent);
         }
 
-        private static bool StudentExists(Student student)
-        {
-            if (IdToStudentMap.ContainsKey(student.Id)) return true;
-
-            return false;
-        }
+        private static bool StudentExists(Student student) => IdToStudentMap.ContainsKey(student.Id);
 
         public static bool AddStudent(Student student)
         {
@@ -112,7 +122,7 @@ namespace Student_Managment.Models
             else
             {
                 AddToCollections(student);
-                StudentStorage.Save(studentsList);
+                SaveAll();
                 return true;
             }
         }
@@ -121,13 +131,13 @@ namespace Student_Managment.Models
         {
             if (StudentExists(student))
             {
-                BestGradeToStudentsMap.TryGetValue(student.Grade, out List<Student> students);
-                students.Remove(student);
+                BestGradeToStudentsMap.TryGetValue(student.Grade, out List<Student>? students);
+                students?.Remove(student);
                 studentsList.Remove(student);
                 IdToStudentMap.Remove(student.Id);
                 RollToStudentsMap[student.RollNum].Remove(student);
 
-                StudentStorage.Save(studentsList);
+                SaveAll();
                 return true;
             }
             else

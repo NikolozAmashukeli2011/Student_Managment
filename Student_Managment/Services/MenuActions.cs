@@ -86,7 +86,7 @@ namespace Student_Managment.Services
             if(success)
             {
                 {
-                    Console.WriteLine("Students found successfully!\n");
+                    Console.WriteLine($"\n[ROLL {rollNum}]\n");
 
                     foreach(Student student in students)
                     {
