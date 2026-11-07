@@ -10,7 +10,19 @@ namespace Student_Managment.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int RollNum { get; set; }
-        public static int count = 0;
+        private static int _Count = 0;
+        public static int Count 
+        {
+            get
+            {
+                return _Count;
+            }
+
+            set
+            {
+                _Count = Math.Max(_Count, value);
+            }
+        }
         private char _grade;
         public char Grade 
         {
@@ -38,8 +50,8 @@ namespace Student_Managment.Models
 
         public Student(string name, int rollNum, char grade)
         {
-            count++;
-            Id = count;
+            Count++;
+            Id = Count;
             Name = name;
             RollNum = rollNum;
             Grade = grade;
